@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cálculo de fibonacci{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="card">
+            <input type="datetime-local" name="start" id="start"/>
+            <input type="datetime-local" name="end" id="end"/>
+            <button id="calculate">Calculate</button>
+
+            <div id="result" class="card">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+    }
+    .card {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 2em;
+        margin-top: 2em;
+        width: 70%;
+        border: solid #dee2e6;
+        border-width: 1px;
+        border-radius: .25rem;
+    }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('calculate').addEventListener('click', (function(event) {send()}));
+        });
+
+        function send() {
+            let start = document.getElementById('start').value;
+            let end = document.getElementById('end').value;
+            if (start && end) {
+                let request = new XMLHttpRequest();
+                request.open('GET', 'http://localhost/api/fibonacci?start=' + start + '&end=' + end);
+                request.send();
+                request.onload = () => {
+                    if (request.status == 200) {
+                        document.getElementById('result').textContent = JSON.parse(request.response).join(', ');
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}
